@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-﻿__pycache__/
+__pycache__/
 *.pyc
 .venv/
 venv/
@@ -224,4 +223,3 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
->>>>>>> 181bf5482cbdcee555d098f8c2b4a682c98a98ca
