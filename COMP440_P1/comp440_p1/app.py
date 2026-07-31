@@ -25,7 +25,7 @@ app.secret_key = "CHANGE_ME_TO_A_RANDOM_SECRET_IN_PRODUCTION"  # needed for sess
 DB_CONFIG = {
     "host": "localhost",
     "user": "root",
-    "password": "JBhirbod@1380!",          # <-- put your MySQL root password here
+    "password": "",          # <-- put your MySQL root password here
     "database": "comp440_p1",
 }
 
