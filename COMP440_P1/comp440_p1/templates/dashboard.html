@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink: '#0B1220', slate: '#141F35', field: '#1B2740', hairline: '#28365A',
+          fog: '#8C9CBB', paper: '#F3F6FB', signal: '#2FD9C4',
+        },
+        fontFamily: {
+          display: ['"Space Grotesk"', 'sans-serif'],
+          body: ['Inter', 'sans-serif'],
+          mono: ['"JetBrains Mono"', 'monospace'],
+        },
+      },
+    },
+  };
+</script>
+</head>
+<body class="bg-ink text-paper font-body min-h-screen flex items-center justify-center px-6">
+  <div class="w-full max-w-sm text-center">
+    <div class="mx-auto w-14 h-14 rounded-2xl bg-field border border-hairline flex items-center justify-center mb-6">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2FD9C4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 6 9 17l-5-5"></path>
+      </svg>
+    </div>
+    <p class="font-mono text-xs tracking-widest text-fog uppercase mb-2">Access granted</p>
+    <h1 class="font-display text-3xl font-semibold text-paper">Welcome, {{ first_name }}.</h1>
+    <p class="mt-2 text-sm text-fog">Logged in as <span class="text-paper">{{ username }}</span></p>
+    <a href="{{ url_for('logout') }}"
+      class="mt-8 inline-block rounded-lg border border-hairline px-5 py-2.5 text-sm text-fog hover:text-paper hover:border-signal transition-colors">
+      Log out
+    </a>
+  </div>
+</body>
+</html>

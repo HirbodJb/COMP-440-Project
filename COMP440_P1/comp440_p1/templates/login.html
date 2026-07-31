@@ -1,0 +1,43 @@
+{% extends "auth_base.html" %}
+{% block title %}Log In{% endblock %}
+{% block panel_headline %}Welcome back.{% endblock %}
+{% block panel_subhead %}Your session picks up right where you left it. No credentials are ever stored or logged in plain text.{% endblock %}
+
+{% block content %}
+  <h2 class="font-display text-2xl font-semibold text-paper">Log in</h2>
+  <p class="mt-1.5 text-sm text-fog">Enter your username and password to continue.</p>
+
+  <form method="POST" action="{{ url_for('login') }}" class="mt-8 space-y-5">
+    <div>
+      <label for="username" class="block text-xs font-medium tracking-wide text-fog uppercase">Username</label>
+      <input type="text" id="username" name="username" required autocomplete="username"
+        class="mt-2 w-full rounded-lg bg-field border border-hairline px-3.5 py-2.5 text-paper placeholder-fog/50 focus:border-signal focus:ring-1 focus:ring-signal transition-colors"
+        placeholder="yourusername">
+    </div>
+
+    <div>
+      <div class="flex items-center justify-between">
+        <label for="password" class="block text-xs font-medium tracking-wide text-fog uppercase">Password</label>
+      </div>
+      <div class="relative mt-2">
+        <input type="password" id="password" name="password" required autocomplete="current-password"
+          class="w-full rounded-lg bg-field border border-hairline px-3.5 py-2.5 pr-11 text-paper placeholder-fog/50 focus:border-signal focus:ring-1 focus:ring-signal transition-colors"
+          placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;">
+        <button type="button" class="toggle-password absolute right-0 top-0 h-full w-11 flex items-center justify-center text-fog hover:text-paper transition-colors" data-target="password" tabindex="-1" aria-label="Show password">
+          <svg class="icon-eye w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12s4-7.5 10.5-7.5S22.5 12 22.5 12s-4 7.5-10.5 7.5S1.5 12 1.5 12Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+          <svg class="icon-eye-off w-[18px] h-[18px] hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18"></path><path d="M10.6 5.1A10.7 10.7 0 0 1 12 5c6.5 0 10.5 7 10.5 7a13.9 13.9 0 0 1-3.3 4.1M6.4 6.4C3.4 8.3 1.5 12 1.5 12s4 7 10.5 7a10.6 10.6 0 0 0 5.6-1.6"></path><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"></path></svg>
+        </button>
+      </div>
+    </div>
+
+    <button type="submit"
+      class="w-full rounded-lg bg-signal text-ink font-semibold py-2.5 mt-2 transition-transform hover:brightness-110 active:scale-[0.99] cursor-pointer">
+      Log in
+    </button>
+  </form>
+
+  <p class="mt-6 text-center text-sm text-fog">
+    Don't have an account?
+    <a href="{{ url_for('register') }}" class="text-signal hover:brightness-110">Create one</a>
+  </p>
+{% endblock %}
