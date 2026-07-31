@@ -6,9 +6,10 @@
 CREATE DATABASE IF NOT EXISTS comp440_p1;
 USE comp440_p1;
 
-DROP TABLE IF EXISTS user;
-
-CREATE TABLE user (
+-- This is intentionally non-destructive so rerunning setup does not erase a
+-- teammate's local accounts. Delete/recreate the table manually only when a
+-- full local reset is actually wanted.
+CREATE TABLE IF NOT EXISTS user (
     username   VARCHAR(50)  NOT NULL,
     password   VARCHAR(255) NOT NULL,   -- stores a salted hash, never plaintext
     firstName  VARCHAR(50)  NOT NULL,

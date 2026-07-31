@@ -1,7 +1,7 @@
 """
 COMP 440 - Course Project: Phase 1
 Registration + Login system with SQL-injection prevention (parameterized
-queries) and hashed passwords (Werkzeug's PBKDF2-based hasher).
+queries) and salted password hashing through Werkzeug.
 
 Run:
     pip install -r requirements.txt
@@ -9,7 +9,7 @@ Run:
     python app.py
 Then visit http://127.0.0.1:5000/
 """
-
+import os
 import re
 import mysql.connector
 from mysql.connector import Error
@@ -17,16 +17,17 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-app.secret_key = "CHANGE_ME_TO_A_RANDOM_SECRET_IN_PRODUCTION"  # needed for session cookies
+app.secret_key = os.environ["COMP440_SECRET_KEY"]  # needed for session cookies
 
 # ---------------------------------------------------------------------------
-# Database configuration - edit these to match your local MySQL setup
+# Database configuration. Each developer supplies credentials through local
+# environment variables; secrets must never be committed to this repository.
 # ---------------------------------------------------------------------------
 DB_CONFIG = {
-    "host": "localhost",
-    "user": "root",
-    "password": "",          # <-- put your MySQL root password here
-    "database": "comp440_p1",
+    "host": os.environ.get("COMP440_DB_HOST", "localhost"),
+    "user": os.environ.get("COMP440_DB_USER", "root"),
+    "password": os.environ["COMP440_DB_PASSWORD"],
+    "database": os.environ.get("COMP440_DB_NAME", "comp440_p1"),
 }
 
 
@@ -221,4 +222,7 @@ def logout():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # Keep the interactive debugger off by default. A developer can opt in
+    # locally with COMP440_DEBUG=1; never enable it on a shared/public server.
+    debug_enabled = os.environ.get("COMP440_DEBUG", "").lower() in {"1", "true", "yes"}
+    app.run(debug=debug_enabled)
