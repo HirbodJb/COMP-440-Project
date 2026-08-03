@@ -175,3 +175,6 @@ from the SQL Injection reference material for this project.
 - If you'd rather use PostgreSQL or SQLite instead of MySQL, only
   `DB_CONFIG`/`get_db_connection()` in `app.py` and the connector import
   need to change — the rest of the app is unaffected.
+
+  Youtube Link to the Phase 1 demonstration:
+  https://youtu.be/sclwZpTEeho
