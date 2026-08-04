@@ -182,10 +182,11 @@ def register():
                     flash("Registration successful! You can now log in.")
                     return redirect(url_for("login"))
 
-            except Error as e:
-                # Surface database failures as a user-visible error instead of
-                # silently failing or returning a generic page.
-                errors["general"] = f"Database error: {e}"
+            except Error:
+                # Keep diagnostic details in the server log without exposing
+                # database internals to the person using the application.
+                app.logger.exception("Database error during registration")
+                errors["general"] = "Unable to complete registration right now. Please try again."
             finally:
                 # Always close the connection if it was successfully opened.
                 if conn is not None and conn.is_connected():
@@ -232,10 +233,11 @@ def login():
                 flash("Invalid username or password.")
                 return render_template("login.html")
 
-        except Error as e:
-            # Database problems should be visible to the developer and surfaced
-            # to the user in a controlled way.
-            flash(f"Database error: {e}")
+        except Error:
+            # Keep diagnostic details in the server log without exposing
+            # database internals to the person using the application.
+            app.logger.exception("Database error during login")
+            flash("Unable to log in right now. Please try again.")
             return render_template("login.html")
         finally:
             # Close the database connection no matter how the request ends.
