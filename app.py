@@ -122,9 +122,15 @@ def register():
             errors["username"] = "Username must be 3-50 characters (letters, numbers, underscore)."
         if not first_name:
             errors["first_name"] = "First name is required."
+        elif len(first_name) > 50:
+            errors["first_name"] = "First name must be 50 characters or fewer."
         if not last_name:
             errors["last_name"] = "Last name is required."
-        if not is_valid_email(email):
+        elif len(last_name) > 50:
+            errors["last_name"] = "Last name must be 50 characters or fewer."
+        if len(email) > 100:
+            errors["email"] = "Email must be 100 characters or fewer."
+        elif not is_valid_email(email):
             errors["email"] = "Please enter a valid email address."
         if not is_valid_phone(phone):
             errors["phone"] = "Please enter a valid phone number."

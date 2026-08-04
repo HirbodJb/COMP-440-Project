@@ -20,19 +20,19 @@
     <div class="grid grid-cols-2 gap-3">
       <div>
         <label for="first_name" class="block text-xs font-medium tracking-wide text-fog uppercase">First name</label>
-        <input type="text" id="first_name" name="first_name" required value="{{ form_data.first_name if form_data else '' }}"
+        <input type="text" id="first_name" name="first_name" required maxlength="50" value="{{ form_data.first_name if form_data else '' }}"
           class="mt-2 w-full rounded-lg bg-field border {{ 'border-coral focus:border-coral focus:ring-coral' if errors and errors.first_name else 'border-hairline focus:border-signal focus:ring-signal' }} px-3.5 py-2.5 text-paper placeholder-fog/50 focus:ring-1 transition-colors">
       </div>
       <div>
         <label for="last_name" class="block text-xs font-medium tracking-wide text-fog uppercase">Last name</label>
-        <input type="text" id="last_name" name="last_name" required value="{{ form_data.last_name if form_data else '' }}"
+        <input type="text" id="last_name" name="last_name" required maxlength="50" value="{{ form_data.last_name if form_data else '' }}"
           class="mt-2 w-full rounded-lg bg-field border {{ 'border-coral focus:border-coral focus:ring-coral' if errors and errors.last_name else 'border-hairline focus:border-signal focus:ring-signal' }} px-3.5 py-2.5 text-paper placeholder-fog/50 focus:ring-1 transition-colors">
       </div>
     </div>
 
     <div>
       <label for="email" class="block text-xs font-medium tracking-wide text-fog uppercase">Email</label>
-      <input type="email" id="email" name="email" required autocomplete="email" value="{{ form_data.email if form_data else '' }}"
+      <input type="email" id="email" name="email" required maxlength="100" autocomplete="email" value="{{ form_data.email if form_data else '' }}"
         class="mt-2 w-full rounded-lg bg-field border {{ 'border-coral focus:border-coral focus:ring-coral' if errors and errors.email else 'border-hairline focus:border-signal focus:ring-signal' }} px-3.5 py-2.5 text-paper placeholder-fog/50 focus:ring-1 transition-colors"
         placeholder="you@example.com">
       {% if errors and errors.email %}<p class="mt-1.5 text-xs text-coral">{{ errors.email }}</p>{% endif %}
