@@ -152,12 +152,14 @@ def register():
                 existing = cursor.fetchall()
 
                 # Check each returned row so we can report the exact duplicate
-                # field(s) back to the user.
+                # field(s) back to the user. MySQL's default text comparison is
+                # case-insensitive, so mirror that behavior here; for example,
+                # "TestUser" and "testuser" are the same username.
                 if existing:
                     for row in existing:
-                        if row[0] == username:
+                        if row[0].casefold() == username.casefold():
                             errors["username"] = "That username is already taken."
-                        if row[1] == email:
+                        if row[1].casefold() == email.casefold():
                             errors["email"] = "That email is already registered."
                         if row[2] == phone:
                             errors["phone"] = "That phone number is already registered."
