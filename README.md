@@ -5,6 +5,30 @@ post, browse, sort, like, buy, categorize, and review listings through the web
 interface. The application also provides interfaces for all six advanced SQL
 queries required in Phase 2.
 
+## Team members
+
+1. Carlos Bautista
+2. Bachviet Nguyen
+3. Hirbod Jabbarnezhad
+
+## Individual contributions
+
+- **Carlos Bautista:** Developed the backend application logic, connected the
+  MySQL database to the web application, and updated the backend as the project
+  progressed through each phase. He also recorded the demonstration videos for
+  the assignment submissions.
+- **Bachviet Nguyen:** Designed and created the MySQL database, then maintained
+  and expanded its tables, relationships, constraints, and supporting SQL as
+  the project requirements evolved across the phases.
+- **Hirbod Jabbarnezhad:** Developed the user interface and frontend design,
+  aligned the application screens and interactions with the assignment
+  requirements, and updated the frontend for each phase of the project.
+
+Although each member had primary areas of responsibility, the team worked
+collaboratively throughout every phase. All members supported one another,
+discussed challenging implementation decisions, and worked together to find and
+verify solutions when problems affected more than one part of the application.
+
 ## Features
 
 - Registration and login with salted password hashing
@@ -35,7 +59,21 @@ queries required in Phase 2.
 The database stores the required text value. The interface converts it to stars
 and the feed converts it to a numeric value when calculating average ratings.
 
-## Setup
+## Software requirements
+
+- Python 3.8 or newer, including `pip`
+- MySQL Server 8.0 or newer
+- MySQL Workbench or another MySQL client capable of executing SQL scripts
+- Git for cloning and updating the repository
+- A modern web browser
+- The Python packages pinned in `requirements.txt`:
+  Flask, MySQL Connector/Python, and Werkzeug
+
+Each team member must have access to their own MySQL installation and know the
+password for their local MySQL user. The application does not include or share
+database passwords through Git.
+
+## Installation instructions
 
 Each teammate uses their own local MySQL database and environment variables.
 Accounts and marketplace records are not shared unless the team intentionally
