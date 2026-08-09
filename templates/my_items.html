@@ -1,0 +1,38 @@
+{% extends "market_base.html" %}
+{% block title %}My listings · Circuit Market{% endblock %}
+{% block content %}
+  <div class="flex items-end justify-between gap-4"><div><p class="font-mono text-xs uppercase tracking-[0.2em] text-signal">Seller tools</p><h1 class="mt-2 font-display text-3xl font-bold">My listings</h1></div><a href="{{ url_for('create_item') }}" class="rounded-lg bg-signal px-4 py-2.5 font-semibold text-ink">Post item</a></div>
+  <div class="mt-7 space-y-4">
+    {% for item in items %}
+      <article class="rounded-2xl border border-hairline bg-slate p-5">
+        <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+          <div>
+            <div class="flex flex-wrap items-center gap-2"><p class="font-mono text-xs text-fog">#{{ item.itemId }} · {{ item.datePosted }}</p><span class="rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest {{ 'bg-signal/10 text-signal' if item.status == 'active' else 'bg-coral/10 text-coral' }}">{% if item.buyer and item.status == 'removed' %}sold · taken down{% elif item.buyer %}sold{% elif item.status == 'removed' %}taken down{% else %}active{% endif %}</span></div>
+            <a href="{{ url_for('item_detail', item_id=item.itemId) }}" class="mt-2 block font-display text-xl font-semibold hover:text-signal">{{ item.title }}</a>
+            <p class="mt-2 text-sm text-fog">Categories: {{ item.categories }} · {{ item.reviewCount }} reviews</p>
+            {% if item.buyer %}<p class="mt-2 text-sm font-medium text-coral">Sold to u/{{ item.buyer }} on {{ item.purchaseDate }}</p>{% endif %}
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <a href="{{ url_for('item_detail', item_id=item.itemId) }}" class="rounded-lg border border-hairline px-4 py-2 text-sm text-fog hover:text-paper">View</a>
+          </div>
+        </div>
+        {% if item.status != 'removed' %}
+          <div class="mt-4 grid gap-3 border-t border-hairline pt-4 md:grid-cols-2">
+            <div class="space-y-3">
+              {% if item.status == 'active' %}
+                <form method="POST" action="{{ url_for('update_price', item_id=item.itemId) }}" class="flex"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><div class="relative w-28"><span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-fog">$</span><input name="price" type="number" min="0" step="0.01" value="{{ item.price }}" aria-label="Price in dollars" class="w-full rounded-l-lg border border-hairline bg-field py-2 pl-7 pr-3"></div><button class="rounded-r-lg bg-signal px-3 py-2 text-sm font-semibold text-ink">Update price</button></form>
+              {% endif %}
+              <form method="POST" action="{{ url_for('remove_listing', item_id=item.itemId) }}" onsubmit="return confirm('{{ 'Take down this sold listing? Its purchase record will be kept.' if item.buyer else 'Remove this listing?' }}')"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="w-full rounded-lg border border-coral/50 px-4 py-2.5 text-sm font-semibold text-coral hover:bg-coral/10">{{ 'Take down sold listing' if item.buyer else 'Remove listing' }}</button></form>
+            </div>
+            {% if item.status == 'active' %}
+              <div class="space-y-3">
+                <form method="POST" action="{{ url_for('add_category', item_id=item.itemId) }}" class="flex"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input name="category" required placeholder="lowercase category" class="min-w-0 flex-1 rounded-l-lg border border-hairline bg-field px-3 py-2"><button class="w-40 shrink-0 rounded-r-lg border border-signal px-3 text-sm font-medium text-signal hover:bg-signal/10">Add category</button></form>
+                <form method="POST" action="{{ url_for('remove_category', item_id=item.itemId) }}" class="flex"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><select name="category" class="min-w-0 flex-1 rounded-l-lg border border-hairline bg-field px-3 py-2">{% for category in item.categories.split(', ') if category %}<option>{{ category }}</option>{% endfor %}</select><button class="w-40 shrink-0 rounded-r-lg border border-coral/60 px-3 text-sm font-medium text-coral hover:bg-coral/10">Remove category</button></form>
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      </article>
+    {% else %}<div class="rounded-2xl border border-dashed border-hairline py-20 text-center text-fog">You have not posted any items.</div>{% endfor %}
+  </div>
+{% endblock %}

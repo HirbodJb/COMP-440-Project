@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Circuit Market{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { ink:'#0B1220', slate:'#141F35', field:'#1B2740', hairline:'#28365A', fog:'#8C9CBB', paper:'#F3F6FB', signal:'#2FD9C4', coral:'#FF6B6B' },
+      fontFamily: { display:['Space Grotesk','sans-serif'], body:['Inter','sans-serif'], mono:['JetBrains Mono','monospace'] }
+    } } };
+  </script>
+</head>
+<body class="min-h-screen bg-ink text-paper font-body">
+  <header class="sticky top-0 z-20 border-b border-hairline bg-ink/95 backdrop-blur">
+    <div class="mx-auto max-w-7xl px-5 h-16 flex items-center gap-6">
+      <a href="{{ url_for('dashboard') }}" class="font-display text-xl font-bold tracking-tight text-paper">
+        Circuit<span class="text-signal">Market</span>
+      </a>
+      <nav class="hidden md:flex items-center gap-1 text-sm text-fog">
+        <a href="{{ url_for('dashboard') }}" class="px-3 py-2 rounded-lg hover:bg-field hover:text-paper">For you</a>
+        <a href="{{ url_for('create_item') }}" class="px-3 py-2 rounded-lg hover:bg-field hover:text-paper">Sell</a>
+        <a href="{{ url_for('my_items') }}" class="px-3 py-2 rounded-lg hover:bg-field hover:text-paper">My listings</a>
+        <a href="{{ url_for('reports') }}" class="px-3 py-2 rounded-lg hover:bg-field hover:text-paper">SQL reports</a>
+      </nav>
+      <div class="ml-auto flex items-center gap-3">
+        <span class="hidden sm:inline text-sm text-fog">u/{{ session.username }}</span>
+        <form method="POST" action="{{ url_for('logout') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button class="rounded-lg border border-hairline px-3 py-2 text-sm text-fog hover:text-paper hover:border-signal">Log out</button>
+        </form>
+      </div>
+    </div>
+    <nav class="md:hidden flex overflow-x-auto border-t border-hairline px-3 py-2 gap-2 text-sm text-fog">
+      <a href="{{ url_for('dashboard') }}" class="whitespace-nowrap px-3 py-1">For you</a>
+      <a href="{{ url_for('create_item') }}" class="whitespace-nowrap px-3 py-1">Sell</a>
+      <a href="{{ url_for('my_items') }}" class="whitespace-nowrap px-3 py-1">My listings</a>
+      <a href="{{ url_for('reports') }}" class="whitespace-nowrap px-3 py-1">SQL reports</a>
+    </nav>
+  </header>
+
+  <main class="mx-auto max-w-7xl px-5 py-8">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="mb-6 space-y-2">
+          {% for category, message in messages %}
+            <div class="rounded-xl border px-4 py-3 text-sm {{ 'border-signal/30 bg-signal/10 text-signal' if category == 'success' else 'border-coral/30 bg-coral/10 text-coral' }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

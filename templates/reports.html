@@ -1,0 +1,16 @@
+{% extends "market_base.html" %}
+{% block title %}SQL reports · Circuit Market{% endblock %}
+{% block content %}
+  <h1 class="font-display text-3xl font-bold">Advanced SQL reports</h1><p class="mt-2 text-fog">Run every required query directly through the application interface.</p>
+  <div class="mt-7 grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
+    <a href="{{ url_for('reports', report=1) }}" class="rounded-xl border border-hairline bg-slate p-4 hover:border-signal"><b>Query 1</b><p class="mt-1 text-sm text-fog">Most expensive item(s) in each category.</p></a>
+    <form method="GET" class="rounded-xl border border-hairline bg-slate p-4"><input type="hidden" name="report" value="2"><b>Query 2</b><p class="mt-1 text-sm text-fog">Same-day items in categories X and Y.</p><div class="mt-3 flex gap-2"><input name="category_x" value="{{ category_x }}" required placeholder="category X" class="min-w-0 w-1/2 rounded-lg bg-field px-3 py-2"><input name="category_y" value="{{ category_y }}" required placeholder="category Y" class="min-w-0 w-1/2 rounded-lg bg-field px-3 py-2"></div><button class="mt-3 text-sm font-semibold text-signal">Run query →</button></form>
+    <form method="GET" class="rounded-xl border border-hairline bg-slate p-4"><input type="hidden" name="report" value="3"><b>Query 3</b><p class="mt-1 text-sm text-fog">A user's items with only Good/Excellent reviews.</p><input name="seller" value="{{ seller }}" required placeholder="username" class="mt-3 w-full rounded-lg bg-field px-3 py-2"><button class="mt-3 text-sm font-semibold text-signal">Run query →</button></form>
+    <form method="GET" class="rounded-xl border border-hairline bg-slate p-4"><input type="hidden" name="report" value="4"><b>Query 4</b><p class="mt-1 text-sm text-fog">Top poster(s) on a selected date.</p><input type="date" name="date" value="{{ selected_date }}" required class="mt-3 w-full rounded-lg bg-field px-3 py-2"><button class="mt-3 text-sm font-semibold text-signal">Run query →</button></form>
+    <a href="{{ url_for('reports', report=5) }}" class="rounded-xl border border-hairline bg-slate p-4 hover:border-signal"><b>Query 5</b><p class="mt-1 text-sm text-fog">Users whose reviews are all Poor.</p></a>
+    <a href="{{ url_for('reports', report=6) }}" class="rounded-xl border border-hairline bg-slate p-4 hover:border-signal"><b>Query 6</b><p class="mt-1 text-sm text-fog">Sellers whose items never received Poor.</p></a>
+  </div>
+  {% if title %}
+    <section class="mt-8"><h2 class="font-display text-2xl font-semibold">{{ title }}</h2><div class="mt-4 overflow-x-auto rounded-xl border border-hairline"><table class="w-full text-left text-sm"><thead class="bg-field text-fog"><tr>{% for column in columns %}<th class="px-4 py-3 font-medium">{{ column }}</th>{% endfor %}</tr></thead><tbody>{% for row in rows %}<tr class="border-t border-hairline">{% for column in columns %}<td class="px-4 py-3">{{ row[column] }}</td>{% endfor %}</tr>{% else %}<tr><td colspan="{{ columns|length }}" class="px-4 py-10 text-center text-fog">No matching results.</td></tr>{% endfor %}</tbody></table></div></section>
+  {% endif %}
+{% endblock %}

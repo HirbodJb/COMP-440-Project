@@ -1,0 +1,57 @@
+{% extends "market_base.html" %}
+{% block title %}{{ item.title }} · Circuit Market{% endblock %}
+{% block content %}
+  <a href="{{ url_for('dashboard') }}" class="text-sm text-fog hover:text-signal">← Back to feed</a>
+  <div class="mt-4 grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
+    <div>
+      <article class="rounded-2xl border border-hairline bg-slate p-6">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div><p class="font-mono text-xs text-fog">Item #{{ item.itemId }} · u/{{ item.seller }} · {{ item.datePosted }}</p><h1 class="mt-2 font-display text-3xl font-bold">{{ item.title }}</h1></div>
+          <div class="text-left sm:text-right"><p class="font-display text-3xl font-bold text-signal">${{ '%.2f'|format(item.price) }}</p><span class="mt-1 inline-block rounded-full px-2.5 py-1 text-xs font-semibold uppercase tracking-wide {{ 'bg-signal/10 text-signal' if item.status == 'active' else 'bg-coral/10 text-coral' }}">{{ 'taken down' if item.status == 'removed' else item.status }}</span></div>
+        </div>
+        <p class="mt-6 whitespace-pre-line leading-relaxed text-fog">{{ item.description }}</p>
+        <div class="mt-5 flex flex-wrap gap-2">{% for category in item.categories.split(', ') if category %}<a href="{{ url_for('dashboard', category=category) }}" class="rounded-full bg-field px-3 py-1.5 font-mono text-xs text-fog hover:text-signal">{{ category }}</a>{% endfor %}</div>
+        <div class="mt-6 flex flex-wrap items-center gap-5 border-t border-hairline pt-5 text-sm text-fog">
+          <form method="POST" action="{{ url_for('toggle_like', item_id=item.itemId) }}" class="inline-flex">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" aria-label="{{ 'Unlike' if user_liked else 'Like' }} this item" aria-pressed="{{ 'true' if user_liked else 'false' }}" title="{{ 'Unlike' if user_liked else 'Like this item' }}" class="group inline-flex items-center gap-2 rounded-full px-2 py-1 transition-colors hover:bg-coral/10 {{ 'text-coral' if user_liked else 'text-fog hover:text-coral' }}">
+              <span class="text-2xl leading-none transition-transform group-hover:scale-110">{{ '♥' if user_liked else '♡' }}</span>
+              <span>{{ item.likeCount }} like{{ '' if item.likeCount == 1 else 's' }}</span>
+            </button>
+          </form>
+          <span>★ {{ '%.1f'|format(item.averageRating) if item.reviewCount else 'No rating' }}</span><span>{{ item.reviewCount }} reviews</span>
+        </div>
+      </article>
+
+      <section class="mt-7">
+        <h2 class="font-display text-2xl font-semibold">Community reviews</h2>
+        <div class="mt-4 space-y-3">
+          {% for review in reviews %}
+            <article class="rounded-xl border border-hairline bg-slate p-4"><div class="flex justify-between gap-3"><div><span class="font-semibold">u/{{ review.reviewer }}</span><span class="ml-2 text-signal">{{ '★' * review.stars }}{{ '☆' * (4-review.stars) }}</span><span class="ml-2 text-xs text-fog">{{ review.rating }}</span></div><time class="text-xs text-fog">{{ review.reviewDate }}</time></div><p class="mt-2 text-sm leading-relaxed text-fog">{{ review.comment }}</p></article>
+          {% else %}<div class="rounded-xl border border-dashed border-hairline p-8 text-center text-fog">No reviews yet.</div>{% endfor %}
+        </div>
+      </section>
+    </div>
+
+    <aside class="space-y-5">
+      <div class="rounded-2xl border border-hairline bg-slate p-5">
+        <h2 class="font-display text-lg font-semibold">Actions</h2>
+        {% if item.seller != session.username and item.status == 'active' %}<form method="POST" action="{{ url_for('buy_item', item_id=item.itemId) }}" class="mt-4"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="w-full rounded-lg bg-signal py-2.5 font-semibold text-ink hover:brightness-110">Buy for ${{ '%.2f'|format(item.price) }}</button></form>{% endif %}
+        {% if item.seller == session.username %}<a href="{{ url_for('my_items') }}#manage-{{ item.itemId }}" class="mt-4 block w-full rounded-lg bg-field py-2.5 text-center text-sm hover:text-signal">Manage your listing</a>{% endif %}
+      </div>
+
+      {% if item.seller != session.username %}
+        <form method="POST" action="{{ url_for('add_review', item_id=item.itemId) }}" class="rounded-2xl border border-hairline bg-slate p-5">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <h2 class="font-display text-lg font-semibold">Write a review</h2>
+          <p class="mt-1 text-xs text-fog">One review per item, maximum three per day. Reviews cannot be changed.</p>
+          <label class="mt-4 block text-sm text-fog" for="rating">Rating</label>
+          <select id="rating" name="rating" required class="mt-2 w-full rounded-lg border border-hairline bg-field px-3 py-2.5"><option value="">Choose a rating</option><option value="4">★★★★ Excellent</option><option value="3">★★★☆ Good</option><option value="2">★★☆☆ Fair</option><option value="1">★☆☆☆ Poor</option></select>
+          <label class="mt-4 block text-sm text-fog" for="comment">Short comment</label>
+          <textarea id="comment" name="comment" required maxlength="500" class="mt-2 min-h-28 w-full rounded-lg border border-hairline bg-field px-3 py-2.5"></textarea>
+          <button class="mt-4 w-full rounded-lg bg-signal py-2.5 font-semibold text-ink">Submit permanent review</button>
+        </form>
+      {% endif %}
+    </aside>
+  </div>
+{% endblock %}

@@ -94,15 +94,15 @@
 
         <div class="lg:hidden flex items-center gap-2 font-mono text-xs tracking-widest text-fog uppercase mb-8">
           <span class="w-1.5 h-1.5 rounded-full bg-signal"></span>
-          COMP 440 &middot; Phase 1
+          COMP 440
         </div>
 
-        {% with messages = get_flashed_messages() %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
             <div class="mb-6 space-y-2">
-              {% for msg in messages %}
-                <div class="flex items-start gap-2 rounded-lg border border-coral/30 bg-coral/10 px-3.5 py-2.5 text-sm text-coral">
-                  <span class="font-mono mt-px">!</span>
+              {% for category, msg in messages %}
+                <div class="flex items-start gap-2 rounded-lg border px-3.5 py-2.5 text-sm {{ 'border-signal/30 bg-signal/10 text-signal' if category == 'success' else 'border-coral/30 bg-coral/10 text-coral' }}">
+                  <span class="font-mono mt-px">{{ '✓' if category == 'success' else '!' }}</span>
                   <span>{{ msg }}</span>
                 </div>
               {% endfor %}

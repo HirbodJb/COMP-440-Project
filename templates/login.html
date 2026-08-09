@@ -7,6 +7,7 @@
   <p class="mt-1.5 text-sm text-fog">Enter your username and password to continue.</p>
 
   <form method="POST" action="{{ url_for('login') }}" class="mt-8 space-y-5">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <div>
       <label for="username" class="block text-xs font-medium tracking-wide text-fog uppercase">Username</label>
       <input type="text" id="username" name="username" required autocomplete="username"

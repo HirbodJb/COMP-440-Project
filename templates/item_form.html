@@ -1,0 +1,19 @@
+{% extends "market_base.html" %}
+{% block title %}Post an item · Circuit Market{% endblock %}
+{% block content %}
+  <div class="mx-auto max-w-2xl">
+    <p class="font-mono text-xs uppercase tracking-[0.2em] text-signal">New listing</p>
+    <h1 class="mt-2 font-display text-3xl font-bold">Post an item</h1>
+    <p class="mt-2 text-sm text-fog">You may post at most two items per calendar day.</p>
+    <form method="POST" class="mt-7 space-y-5 rounded-2xl border border-hairline bg-slate p-6">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div><label class="text-sm text-fog" for="title">Title</label><input class="mt-2 w-full rounded-lg border border-hairline bg-field px-3.5 py-3" id="title" name="title" maxlength="120" required value="{{ form_data.title }}"></div>
+      <div><label class="text-sm text-fog" for="description">Description</label><textarea class="mt-2 min-h-40 w-full rounded-lg border border-hairline bg-field px-3.5 py-3" id="description" name="description" maxlength="5000" required>{{ form_data.description }}</textarea></div>
+      <div class="grid gap-5 sm:grid-cols-2">
+        <div><label class="text-sm text-fog" for="price">Price</label><input class="mt-2 w-full rounded-lg border border-hairline bg-field px-3.5 py-3" type="number" id="price" name="price" min="0" max="99999999.99" step="0.01" required value="{{ form_data.price }}"></div>
+        <div><label class="text-sm text-fog" for="categories">Categories</label><input class="mt-2 w-full rounded-lg border border-hairline bg-field px-3.5 py-3" id="categories" name="categories" required value="{{ form_data.categories }}" placeholder="keyboards, gaming"><p class="mt-1.5 text-xs text-fog">Lowercase single words, separated by commas.</p></div>
+      </div>
+      <button class="w-full rounded-lg bg-signal py-3 font-semibold text-ink hover:brightness-110">Publish listing</button>
+    </form>
+  </div>
+{% endblock %}

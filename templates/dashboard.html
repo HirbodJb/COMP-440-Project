@@ -1,44 +1,67 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-  tailwind.config = {
-    theme: {
-      extend: {
-        colors: {
-          ink: '#0B1220', slate: '#141F35', field: '#1B2740', hairline: '#28365A',
-          fog: '#8C9CBB', paper: '#F3F6FB', signal: '#2FD9C4',
-        },
-        fontFamily: {
-          display: ['"Space Grotesk"', 'sans-serif'],
-          body: ['Inter', 'sans-serif'],
-          mono: ['"JetBrains Mono"', 'monospace'],
-        },
-      },
-    },
-  };
-</script>
-</head>
-<body class="bg-ink text-paper font-body min-h-screen flex items-center justify-center px-6">
-  <div class="w-full max-w-sm text-center">
-    <div class="mx-auto w-14 h-14 rounded-2xl bg-field border border-hairline flex items-center justify-center mb-6">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2FD9C4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M20 6 9 17l-5-5"></path>
-      </svg>
+{% extends "market_base.html" %}
+{% block title %}For You · Circuit Market{% endblock %}
+{% block content %}
+  <section class="mb-8 flex flex-col lg:flex-row lg:items-end justify-between gap-5">
+    <div>
+      <p class="font-mono text-xs uppercase tracking-[0.2em] text-signal">Your marketplace feed</p>
+      <h1 class="mt-2 font-display text-4xl font-bold">For you</h1>
+      <p class="mt-2 text-fog">Discover keyboards, monitors, laptops, cables, and more from the community.</p>
     </div>
-    <p class="font-mono text-xs tracking-widest text-fog uppercase mb-2">Access granted</p>
-    <h1 class="font-display text-3xl font-semibold text-paper">Welcome, {{ first_name }}.</h1>
-    <p class="mt-2 text-sm text-fog">Logged in as <span class="text-paper">{{ username }}</span></p>
-    <a href="{{ url_for('logout') }}"
-      class="mt-8 inline-block rounded-lg border border-hairline px-5 py-2.5 text-sm text-fog hover:text-paper hover:border-signal transition-colors">
-      Log out
-    </a>
+    <a href="{{ url_for('create_item') }}" class="inline-flex justify-center rounded-xl bg-signal px-5 py-3 font-semibold text-ink hover:brightness-110">Post an item</a>
+  </section>
+
+  <form method="GET" class="mb-4 grid gap-3 rounded-2xl border border-hairline bg-slate p-4 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_auto]">
+    <div>
+      <label class="mb-1.5 block text-xs uppercase tracking-wide text-fog" for="category">Category</label>
+      <select id="category" name="category" class="w-full rounded-lg border border-hairline bg-field px-3 py-2.5 text-paper">
+        <option value="">All categories</option>
+        {% for category in categories %}<option value="{{ category }}" {{ 'selected' if category == selected_category }}>{{ category }}</option>{% endfor %}
+      </select>
+    </div>
+    <div>
+      <label class="mb-1.5 block text-xs uppercase tracking-wide text-fog" for="sort">Sort by</label>
+      <select id="sort" name="sort" class="w-full rounded-lg border border-hairline bg-field px-3 py-2.5 text-paper">
+        {% for value, label in [('newest','Newest first'),('oldest','Oldest first'),('likes','Most liked'),('likes_low','Least liked'),('rating','Best reviewed'),('rating_low','Lowest reviewed'),('reviews','Most reviewed'),('reviews_low','Fewest reviewed'),('price_low','Price: low to high'),('price_high','Price: high to low')] %}
+          <option value="{{ value }}" {{ 'selected' if value == selected_sort }}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button class="self-end rounded-lg border border-signal px-5 py-2.5 font-semibold text-signal hover:bg-signal hover:text-ink">Apply</button>
+  </form>
+
+  <div class="mb-5 flex items-center justify-between gap-4 text-sm text-fog" aria-live="polite">
+    <p>
+      <span class="font-display text-lg font-semibold text-paper">{{ items|length }}</span>
+      product{{ '' if items|length == 1 else 's' }} shown
+      {% if selected_category %}<span>in <span class="font-mono text-signal">{{ selected_category }}</span></span>{% endif %}
+    </p>
   </div>
-</body>
-</html>
+
+  {% if items %}
+    <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+      {% for item in items %}
+        <article class="group flex flex-col rounded-2xl border border-hairline bg-slate p-5 hover:border-signal/60 transition-colors">
+          <div class="flex items-start justify-between gap-4">
+            <div class="min-w-0">
+              <p class="font-mono text-xs text-fog">u/{{ item.seller }} · {{ item.datePosted }}</p>
+              <h2 class="mt-2 truncate font-display text-xl font-semibold group-hover:text-signal">{{ item.title }}</h2>
+            </div>
+            <span class="font-display text-xl font-bold text-signal">${{ '%.2f'|format(item.price) }}</span>
+          </div>
+          <p class="mt-3 line-clamp-3 text-sm leading-relaxed text-fog">{{ item.description }}</p>
+          <div class="mt-4 flex flex-wrap gap-2">
+            {% for category in item.categories.split(', ') if category %}<span class="rounded-full bg-field px-2.5 py-1 font-mono text-[11px] text-fog">{{ category }}</span>{% endfor %}
+          </div>
+          <div class="mt-5 flex items-center gap-4 border-t border-hairline pt-4 text-sm text-fog">
+            <span>♥ {{ item.likeCount }}</span>
+            <span>★ {{ '%.1f'|format(item.averageRating) if item.reviewCount else '—' }}</span>
+            <span>{{ item.reviewCount }} review{{ '' if item.reviewCount == 1 else 's' }}</span>
+          </div>
+          <a href="{{ url_for('item_detail', item_id=item.itemId) }}" class="mt-4 rounded-lg bg-field py-2.5 text-center text-sm font-semibold text-paper hover:bg-signal hover:text-ink">View item</a>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="rounded-2xl border border-dashed border-hairline py-20 text-center text-fog">No active items match this feed yet.</div>
+  {% endif %}
+{% endblock %}

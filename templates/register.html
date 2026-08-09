@@ -8,6 +8,7 @@
   <p class="mt-1.5 text-sm text-fog">Takes about a minute.</p>
 
   <form method="POST" action="{{ url_for('register') }}" class="mt-7 space-y-4" id="register-form" novalidate>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
     <div>
       <label for="username" class="block text-xs font-medium tracking-wide text-fog uppercase">Username</label>
