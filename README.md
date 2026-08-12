@@ -242,3 +242,4 @@ local test database.
 - Run all six advanced SQL reports from the SQL reports page.
 
 Phase 1 demonstration: https://youtu.be/sclwZpTEeho
+Phase 2 demonstration: https://www.youtube.com/watch?v=lWE1eXhQdro
